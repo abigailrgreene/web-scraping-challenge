@@ -12,7 +12,7 @@ def init_browser():
 def scrape_info():
     browser = init_browser()
 
-    url = "https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars"
+    url = "https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars"
     browser.visit(url)
 
     time.sleep(1)
@@ -21,28 +21,17 @@ def scrape_info():
     html = browser.html
     soup = bs(html, 'html.parser')
 
-    images_list = soup.find_all(class_='item')
+    background = soup.find('footer')
+    image = background.find('a')['data-fancybox-href']
+    featured_image_url = 'https://www.jpl.nasa.gov' + image
 
-    
-    hemisphere_images_urls = []
-
-    for image in images_list:
-        link = "https://astrogeology.usgs.gov/" + image.a["href"]
-        browser.visit(link)
-        html = browser.html
-        soup = bs(html, 'html.parser')
-        pic = soup.find('img', class_="wide-image")["src"]
-        pic_link = "https://astrogeology.usgs.gov/" + pic
-        title_ = soup.find('h2', class_='title')
-        hemisphere_images_urls.append(
-        {
-            'title': title_.text,
-            'img_url': pic_link
-        }
-    )
+    mars_data = {
+        "feat_img": featured_image_url
+    }
 
     # Close the browser after scraping
     browser.quit()
 
     # Return results
-    return hemisphere_images_urls
+    return mars_data
+
