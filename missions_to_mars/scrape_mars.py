@@ -19,7 +19,7 @@ def scrape_info():
 
     # Scrape page into Soup
     html = browser.html
-    soup = BeautifulSoup(html, 'html.parser')
+    soup = bs(html, 'html.parser')
 
     images_list = soup.find_all(class_='item')
 
@@ -30,7 +30,7 @@ def scrape_info():
         link = "https://astrogeology.usgs.gov/" + image.a["href"]
         browser.visit(link)
         html = browser.html
-        soup = BeautifulSoup(html, 'html.parser')
+        soup = bs(html, 'html.parser')
         pic = soup.find('img', class_="wide-image")["src"]
         pic_link = "https://astrogeology.usgs.gov/" + pic
         title_ = soup.find('h2', class_='title')
